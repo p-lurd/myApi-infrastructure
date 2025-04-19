@@ -1,0 +1,79 @@
+
+services:
+  mongodb:
+    image: mongo:7.0.12
+    container_name: mongodb
+    restart: always
+    env_file:
+      - ./.env.production
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - weUp
+  
+  # For the nestJs backend
+  nestjs-backend:
+    image: jedit/myapi-backend:${BACKEND_VERSION:-latest}
+    build: ./my-api-backend
+    container_name: nestjs-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./my-api-backend/.env.production
+    depends_on:
+      - mongodb
+    networks:
+      - weUp
+
+
+  # For the golang microservice
+  go-service:
+    image: jedit/myapi-microservice:${MICROSERVICE_VERSION:-latest}
+    build: ./my-api-backend/api-monitor-worker
+    container_name: go-service
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./my-api-backend/api-monitor-worker/.env.production
+    # environment:
+    #   - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - mongodb
+    networks:
+      - weUp
+
+  # For frontend
+  react-frontend:
+    image: jedit/myapi-frontend:${FRONTEND_VERSION:-latest}
+    build: ./my-api-frontend
+    container_name: react-frontend
+    restart: always
+    ports:
+      - "80:80"
+    env_file:
+      - ./my-api-frontend/.env.production
+    depends_on:
+      - nestjs-backend
+      - go-service
+    networks:
+      - weUp
+
+volumes:
+  mongodb_data:
+
+networks:
+  weUp:
+    external: true
+
+
+
+
+
+
+
