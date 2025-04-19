@@ -1,6 +1,8 @@
 [submodule "my-api-backend"]
 	path = my-api-backend
 	url = https://github.com/p-lurd/myApi-backend
+	branch = main
 [submodule "my-api-frontend"]
 	path = my-api-frontend
 	url = https://github.com/p-lurd/myApi-frontend
+	branch = main
