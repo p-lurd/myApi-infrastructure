@@ -23,5 +23,13 @@ $ cd ..
 $ git add my-api-backend
 $ git commit -m "Update backend submodule to latest commit"
 ```
+
+## Others
+```bash
+# Always Pull the Latest Submodule Version, anytime a pull or clone is done
+$ git submodule update --remote --merge
+# Automatically Init & Update Submodules on Clone
+$ git clone --recurse-submodules https://github.com/p-lurd/myApi-infrastructure
+```
 - Twitter - [@p_lurd](https://x.com/p_lurd)
 
